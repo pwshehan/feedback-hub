@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Pagination as PaginationContainer,
@@ -8,14 +8,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 interface PaginationProps {
   currentPage: number;
@@ -41,45 +41,45 @@ export function Pagination({
   // Generate an array of page numbers to display
   const getPageNumbers = () => {
     const pages = [];
-    
+
     // Always show first page
     pages.push(1);
-    
+
     // Calculate range around current page
     const leftBound = Math.max(2, currentPage - 1);
     const rightBound = Math.min(totalPages - 1, currentPage + 1);
-    
+
     // Add ellipsis if needed before leftBound
     if (leftBound > 2) {
       pages.push('leftEllipsis');
     }
-    
+
     // Add pages in the middle
     for (let i = leftBound; i <= rightBound; i++) {
       if (i > 1 && i < totalPages) {
         pages.push(i);
       }
     }
-    
+
     // Add ellipsis if needed after rightBound
     if (rightBound < totalPages - 1) {
       pages.push('rightEllipsis');
     }
-    
+
     // Always show last page if there's more than one page
     if (totalPages > 1) {
       pages.push(totalPages);
     }
-    
+
     return pages;
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+    <div className="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
       <div className="text-sm text-muted-foreground">
         Showing {start}-{end} of {totalItems} items
       </div>
-      
+
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Items per page:</span>
@@ -98,7 +98,7 @@ export function Pagination({
             </SelectContent>
           </Select>
         </div>
-        
+
         <PaginationContainer>
           <PaginationContent>
             <PaginationItem>
@@ -108,7 +108,7 @@ export function Pagination({
                   e.preventDefault();
                   if (currentPage > 1) onPageChange(currentPage - 1);
                 }}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
               />
             </PaginationItem>
 
@@ -120,7 +120,7 @@ export function Pagination({
                   </PaginationItem>
                 );
               }
-              
+
               return (
                 <PaginationItem key={page}>
                   <PaginationLink
@@ -144,7 +144,7 @@ export function Pagination({
                   e.preventDefault();
                   if (currentPage < totalPages) onPageChange(currentPage + 1);
                 }}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
               />
             </PaginationItem>
           </PaginationContent>

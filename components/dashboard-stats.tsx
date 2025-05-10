@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,9 +29,9 @@ export function DashboardStats() {
       } catch (error) {
         console.error('Error fetching statistics:', error);
         toast({
-          title: "Error",
-          description: "Failed to load dashboard statistics",
-          variant: "destructive",
+          title: 'Error',
+          description: 'Failed to load dashboard statistics',
+          variant: 'destructive',
         });
       } finally {
         setIsLoading(false);
@@ -49,12 +49,8 @@ export function DashboardStats() {
           <Activity className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {isLoading ? "--" : stats?.totalCount || 0}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            All submitted feedback items
-          </p>
+          <div className="text-2xl font-bold">{isLoading ? '--' : stats?.totalCount || 0}</div>
+          <p className="text-xs text-muted-foreground">All submitted feedback items</p>
         </CardContent>
       </Card>
       <Card>
@@ -63,12 +59,8 @@ export function DashboardStats() {
           <MessageSquare className="h-4 w-4 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {isLoading ? "--" : stats?.reviewsCount || 0}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Customer reviews received
-          </p>
+          <div className="text-2xl font-bold">{isLoading ? '--' : stats?.reviewsCount || 0}</div>
+          <p className="text-xs text-muted-foreground">Customer reviews received</p>
         </CardContent>
       </Card>
       <Card>
@@ -77,12 +69,8 @@ export function DashboardStats() {
           <Bug className="h-4 w-4 text-amber-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {isLoading ? "--" : stats?.reportsCount || 0}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Bug reports submitted
-          </p>
+          <div className="text-2xl font-bold">{isLoading ? '--' : stats?.reportsCount || 0}</div>
+          <p className="text-xs text-muted-foreground">Bug reports submitted</p>
         </CardContent>
       </Card>
       <Card>
@@ -91,12 +79,8 @@ export function DashboardStats() {
           <BarChart className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {isLoading ? "--" : stats?.averageRating || 0}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            From all submitted reviews
-          </p>
+          <div className="text-2xl font-bold">{isLoading ? '--' : stats?.averageRating || 0}</div>
+          <p className="text-xs text-muted-foreground">From all submitted reviews</p>
         </CardContent>
       </Card>
     </div>

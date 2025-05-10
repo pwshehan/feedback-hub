@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FeedbackCard } from '@/components/feedback/feedback-card';
 import { Pagination } from '@/components/feedback/pagination';
 import { Filters } from '@/components/feedback/filters';
@@ -19,7 +19,7 @@ export function FeedbackList() {
   const [limit, setLimit] = useState(10);
   const { toast } = useToast();
 
-  const fetchFeedback = async () => {
+  const fetchFeedback = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -28,21 +28,21 @@ export function FeedbackList() {
       const params = new URLSearchParams();
       params.append('page', page.toString());
       params.append('limit', limit.toString());
-      
+
       if (filters.type) {
         params.append('type', filters.type);
       }
-      
+
       if (filters.isRead !== undefined) {
         params.append('isRead', filters.isRead.toString());
       }
-      
+
       const response = await fetch(`/api/reviews?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch feedback');
       }
-      
+
       const data = await response.json();
       setFeedbackData(data);
     } catch (err) {
@@ -50,11 +50,11 @@ export function FeedbackList() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, limit, filters]);
 
   useEffect(() => {
     fetchFeedback();
-  }, [page, limit, filters]);
+  }, [fetchFeedback]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -75,33 +75,33 @@ export function FeedbackList() {
       const response = await fetch(`/api/reviews/${id}/mark-read`, {
         method: 'PUT',
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to mark as read');
       }
-      
+
       // Update local state
       if (feedbackData) {
-        const updatedFeedback = feedbackData.feedback.map((item) => 
+        const updatedFeedback = feedbackData.feedback.map((item) =>
           item._id?.toString() === id ? { ...item, isRead: true } : item
         );
-        
+
         setFeedbackData({
           ...feedbackData,
           feedback: updatedFeedback,
         });
       }
-      
+
       toast({
-        title: "Successfully marked as read",
-        description: "The feedback item has been updated.",
+        title: 'Successfully marked as read',
+        description: 'The feedback item has been updated.',
       });
     } catch (error) {
       console.error('Error marking as read:', error);
       toast({
-        title: "Error",
-        description: "Failed to mark feedback as read. Please try again.",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to mark feedback as read. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -111,9 +111,7 @@ export function FeedbackList() {
       <Alert variant="destructive" className="mb-6">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          {error}. Please try refreshing the page.
-        </AlertDescription>
+        <AlertDescription>{error}. Please try refreshing the page.</AlertDescription>
       </Alert>
     );
   }
@@ -134,37 +132,30 @@ export function FeedbackList() {
     if (!feedbackData || feedbackData.feedback.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Inbox className="h-12 w-12 text-muted-foreground mb-4" />
+          <Inbox className="mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="text-lg font-medium">No feedback found</h3>
-          <p className="text-muted-foreground mt-2 max-w-md">
+          <p className="mt-2 max-w-md text-muted-foreground">
             {Object.keys(filters).length > 0
-              ? "Try adjusting your filters to see more results."
-              : "There are no feedback items in the system yet."}
+              ? 'Try adjusting your filters to see more results.'
+              : 'There are no feedback items in the system yet.'}
           </p>
         </div>
       );
     }
 
     return feedbackData.feedback.map((item: Feedback) => (
-      <FeedbackCard 
-        key={item._id?.toString()} 
-        feedback={item} 
-        onMarkAsRead={handleMarkAsRead}
-      />
+      <FeedbackCard key={item._id?.toString()} feedback={item} onMarkAsRead={handleMarkAsRead} />
     ));
   };
 
   return (
     <div className="space-y-6">
-      <Filters 
-        filters={filters} 
-        onFiltersChange={handleFiltersChange} 
-      />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <Filters filters={filters} onFiltersChange={handleFiltersChange} />
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {renderFeedbackList()}
       </div>
-      
+
       {feedbackData && feedbackData.feedback.length > 0 && (
         <Pagination
           currentPage={page}
