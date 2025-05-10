@@ -1,6 +1,5 @@
-"use client"
+'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -18,12 +17,11 @@ interface FiltersProps {
 }
 
 export function Filters({ filters, onFiltersChange }: FiltersProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleTypeChange = (value: string) => {
     if (value === 'ALL') {
-      const { type, ...rest } = filters;
-      onFiltersChange(rest);
+      const newFilters = { ...filters };
+      delete newFilters.type;
+      onFiltersChange(newFilters);
     } else {
       onFiltersChange({ ...filters, type: value as 'REVIEW' | 'REPORT' });
     }
@@ -31,8 +29,9 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
 
   const handleReadStatusChange = (value: string) => {
     if (value === 'ALL') {
-      const { isRead, ...rest } = filters;
-      onFiltersChange(rest);
+      const newFilters = { ...filters };
+      delete newFilters.isRead;
+      onFiltersChange(newFilters);
     } else {
       onFiltersChange({ ...filters, isRead: value === 'READ' });
     }
@@ -44,18 +43,17 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
 
   return (
     <div className="mb-4 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <h2 className="text-lg font-semibold flex items-center gap-1.5">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+        <h2 className="flex items-center gap-1.5 text-lg font-semibold">
           <Filter size={18} />
           Filters
         </h2>
         <div className="flex flex-wrap gap-3">
           <div className="flex flex-col">
-            <label htmlFor="type-filter" className="text-sm text-muted-foreground mb-1">Type</label>
-            <Select
-              value={filters.type || 'ALL'}
-              onValueChange={handleTypeChange}
-            >
+            <label htmlFor="type-filter" className="mb-1 text-sm text-muted-foreground">
+              Type
+            </label>
+            <Select value={filters.type || 'ALL'} onValueChange={handleTypeChange}>
               <SelectTrigger id="type-filter" className="w-[140px]">
                 <SelectValue placeholder="All Types" />
               </SelectTrigger>
@@ -78,7 +76,9 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="read-filter" className="text-sm text-muted-foreground mb-1">Status</label>
+            <label htmlFor="read-filter" className="mb-1 text-sm text-muted-foreground">
+              Status
+            </label>
             <Select
               value={filters.isRead !== undefined ? (filters.isRead ? 'READ' : 'UNREAD') : 'ALL'}
               onValueChange={handleReadStatusChange}
@@ -94,12 +94,7 @@ export function Filters({ filters, onFiltersChange }: FiltersProps) {
             </Select>
           </div>
 
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={clearFilters}
-            className="self-end"
-          >
+          <Button variant="outline" onClick={clearFilters} className="self-end">
             Clear Filters
           </Button>
         </div>

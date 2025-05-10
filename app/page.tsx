@@ -6,11 +6,11 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 container max-w-6xl mx-auto px-4 md:px-6 py-8">
+      <main className="container mx-auto max-w-6xl flex-1 px-4 py-8 md:px-6">
         <div className="flex flex-col gap-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Feedback Dashboard</h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="mt-2 text-muted-foreground">
               Manage and analyze customer reviews and bug reports in one place.
             </p>
           </div>

@@ -11,11 +11,7 @@ export const metadata: Metadata = {
   description: 'Manage and review customer feedback and bug reports',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
