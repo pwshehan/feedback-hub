@@ -6,5 +6,5 @@ Feedback Hub is a web application designed to collect and manage user feedback e
 
 To run Feedback Hub using Docker, use the following command:
 ````bash
-docker run -p 3001:3000 --env=MONGODB_URI="" --env=NEXTAUTH_URL="" --env=NEXTAUTH_SECRET="" --name="" -d pwshehan/feedback-hub
+docker run -p 3001:3000 --env=MONGODB_URI="" --env=NEXTAUTH_URL="" --env=NEXTAUTH_SECRET="" --env=ADMIN_EMAIL="" --env=ADMIN_PASSWORD="" --name="" -d pwshehan/feedback-hub
 ```
