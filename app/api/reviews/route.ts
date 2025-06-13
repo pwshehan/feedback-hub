@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { FeedbackType, Feedback } from '@/lib/models/feedback';
+import { FeedbackType } from '@/lib/models/feedback';
+import { verifyToken, createAuthResponse } from '@/lib/auth-middleware';
 
 export const dynamic = 'force-dynamic';
 
-// CORS headers
+// Enhanced CORS headers for external API access
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-API-Key',
+  'Access-Control-Max-Age': '86400',
 };
 
 export async function OPTIONS() {
@@ -17,23 +19,37 @@ export async function OPTIONS() {
 
 export async function GET(request: Request) {
   try {
+    // Verify authentication for external API access
+    const user = await verifyToken(request as any);
+    if (!user) {
+      return NextResponse.json(createAuthResponse('Valid authentication token required'), {
+        status: 401,
+        headers: corsHeaders,
+      });
+    }
+
     const { searchParams } = new URL(request.url);
 
     // Parse query parameters
     const type = searchParams.get('type') as FeedbackType | null;
     const isReadParam = searchParams.get('isRead');
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || '10', 10);
+    const limit = Math.min(parseInt(searchParams.get('limit') || '10', 10), 100); // Cap at 100 items per page
+    const accountId = searchParams.get('account_id'); // Allow filtering by account ID
 
     // Build query filters
-    const filter: Partial<Feedback> = {};
+    const filter: any = {};
 
-    if (type) {
+    if (type && ['REVIEW', 'REPORT'].includes(type)) {
       filter.type = type;
     }
 
     if (isReadParam !== null) {
       filter.isRead = isReadParam === 'true';
+    }
+
+    if (accountId) {
+      filter.account_id = accountId;
     }
 
     // Connect to MongoDB
@@ -57,17 +73,29 @@ export async function GET(request: Request) {
 
     return NextResponse.json(
       {
-        feedback,
-        totalCount,
-        totalPages,
-        currentPage: page,
+        success: true,
+        data: {
+          feedback,
+          pagination: {
+            totalCount,
+            totalPages,
+            currentPage: page,
+            limit,
+            hasNext: page < totalPages,
+            hasPrev: page > 1,
+          },
+        },
       },
       { headers: corsHeaders }
     );
   } catch (error) {
     console.error('Error fetching feedback:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        success: false,
+        error: 'Internal server error',
+        message: 'Failed to fetch feedback data',
+      },
       { status: 500, headers: corsHeaders }
     );
   }
