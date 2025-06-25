@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     // Connect to MongoDB
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('feedback');
+    const collection = db.collection('feedbacks');
 
     // Count total documents matching the filter
     const totalCount = await collection.countDocuments(filter);

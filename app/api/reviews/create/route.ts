@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     // Connect to MongoDB
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('feedback');
+    const collection = db.collection('feedbacks');
 
     // Create the feedback document
     const feedbackDoc = {

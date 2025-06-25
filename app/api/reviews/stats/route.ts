@@ -18,7 +18,7 @@ export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('feedback');
+    const collection = db.collection('feedbacks');
 
     // Get total counts
     const totalCount = await collection.countDocuments();

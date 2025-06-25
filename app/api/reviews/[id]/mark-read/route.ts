@@ -28,7 +28,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     // Connect to MongoDB
     const client = await clientPromise;
     const db = client.db();
-    const collection = db.collection('feedback');
+    const collection = db.collection('feedbacks');
 
     // Update the document
     const result = await collection.updateOne(
